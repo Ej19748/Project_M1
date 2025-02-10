@@ -1,71 +1,64 @@
 #include <iostream>
-#include <string>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
-void readScores(double& s1, double& s2, double& s3);
-void getGrade(const double s1, const double s2, const double s3, double& avg, char& grade);
-double getAverage(const double s1, const double s2, const double s3, double& average);
-void print(const double s1, const double s2, const double s3, const double average, const char grade);
-
+string getComputerChoice() {
+    int randomNum = rand() % 3;
+    if (randomNum == 0) return "Rock";
+    if (randomNum == 1) return "Paper";
+    return "Scissors";
+}
+int determineWinner(string playerChoice, string computerChoice) {
+    if (playerChoice == computerChoice) return 0;
+    if ((playerChoice == "Rock" && computerChoice == "Scissors") ||
+        (playerChoice == "Scissors" && computerChoice == "Paper") ||
+        (playerChoice == "Paper" && computerChoice == "Rock")) {
+        return 1;
+    }
+    return -1;
+}
 int main() {
-    double s1, s2, s3, average;
-    char grade = 0;
-    readScores(s1, s2, s3);
-    getGrade(s1, s2, s3, average, grade);
-    getAverage(s1, s2, s3, average);
-    print(s1, s2, s3, average, grade);
+    srand(time(0));
+    int playerScore = 0, computerScore = 0;
+    string playerChoice;
+    char playAgain;
+    cout << "Welcome to the Rock, Paper, Scissors Tournament!" << endl;
+    do {
+        cout << "\nEnter Rock, Paper, or Scissors: ";
+        cin >> playerChoice;
+        for (char &c : playerChoice) c = tolower(c);
+        if (playerChoice == "rock") playerChoice = "Rock";
+        else if (playerChoice == "paper") playerChoice = "Paper";
+        else if (playerChoice == "scissors") playerChoice = "Scissors";
+        else {
+            cout << "Invalid choice! Please enter Rock, Paper, or Scissors.\n";
+            continue; }
+        string computerChoice = getComputerChoice();
+        cout << "Computer chose: " << computerChoice << endl;
+        int result = determineWinner(playerChoice, computerChoice);
+        if (result == 1) {
+            cout << "You win this round!" << endl;
+            playerScore++;
+        } else if (result == -1) {
+            cout << "Computer wins this round!" << endl;
+            computerScore++;
+        } else {
+            cout << "This round is a draw!" << endl;
+        }
+        cout << "Score -> You: " << playerScore << " | Computer: " << computerScore << endl;        
+        cout << "Do you want to play another round? (y/n): ";
+        cin >> playAgain;
+    } while (playAgain == 'y' || playAgain == 'Y');
+    cout << "\nTournament Over!" << endl;
+    cout << "Final Score -> You: " << playerScore << " | Computer: " << computerScore << endl;
+    if (playerScore > computerScore) {
+        cout << "Congratulations! You win the tournament!" << endl;
+    } else if (playerScore < computerScore) {
+        cout << "Computer wins the tournament! Better luck next time." << endl;
+    } else {
+        cout << "The tournament ends in a draw!" << endl;
+    }
     return 0;
 }
-void readScores(double& s1, double& s2, double& s3) {
-    cout << "Enter three grades: ";
-    cin >> s1 >> s2 >> s3;
-    while (s1 < 0 || s1 > 100)
-      {
-        cout << "Enter a grade from 0 to 100: ";
-        cin >> s1;
-        break;
-      }
-    while (s2 < 0 || s2 > 100)
-      {
-        cout << "Enter a grade from 0 to 100: ";
-        cin >> s2;
-        break;
-      }
-    while (s3 < 0 || s3 > 100)
-      {
-        cout << "Enter a grade from 0 to 100: ";
-        cin >> s3;
-        break;
-      }
-    }
-    double getAverage(double s1, double s2, double s3, double& average) { 
-    average = (s1 + s2 + s3) / 3.0;
-    return average;
-  }
-    void getGrade(double s1, double s2, double s3, double& average, char& grade) {
-    average = (s1 + s2 + s3) / 3.0;
-      cout << "Average: " << average << endl;
-      if (90 < average && average <= 100) {
-        cout << "Grade: A" << endl;
-      }
-      else if (80 < average && average < 90) {
-        cout << "Grade: B" << endl;
-      }
-       else if (70 < average && average < 80) {
-        cout << "Grade: C" << endl;
-      }
-        else if (60 < average && average < 70) {
-        cout << "Grade: D" << endl;
-      }
-        else if (0 < average && average < 60) {
-        cout << "Grade: F" << endl;
-      }
-    } 
-    void print(double s1, double s2, double s3, double average, char grade) {
-      cout << "Score 1: " << s1 << endl;
-      cout << "Score 2: " << s2 << endl;
-      cout << "Score 3: " << s3 << endl;
-      cout << "Average: " << average << endl;
-      cout << "Grade: " << grade << endl;
-    }
