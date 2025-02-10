@@ -49,16 +49,16 @@ void readScores(double& s1, double& s2, double& s3) {
       if (90 < average && average <= 100) {
         cout << "Grade: A" << endl;
       }
-      else if (80 < average && average < 89) {
+      else if (80 < average && average < 90) {
         cout << "Grade: B" << endl;
       }
-       else if (70 < average && average < 79) {
+       else if (70 < average && average < 80) {
         cout << "Grade: C" << endl;
       }
-        else if (60 < average && average < 69) {
+        else if (60 < average && average < 70) {
         cout << "Grade: D" << endl;
       }
-        else if (0 < average && average < 59) {
+        else if (0 < average && average < 60) {
         cout << "Grade: F" << endl;
       }
     } 
