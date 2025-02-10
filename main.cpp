@@ -47,18 +47,23 @@ void readScores(double& s1, double& s2, double& s3) {
     average = (s1 + s2 + s3) / 3.0;
       cout << "Average: " << average << endl;
       if (90 < average && average <= 100) {
+        grade = 'A';
         cout << "Grade: A" << endl;
       }
       else if (80 < average && average < 90) {
+        grade = 'B';
         cout << "Grade: B" << endl;
       }
        else if (70 < average && average < 80) {
+        grade = 'C';
         cout << "Grade: C" << endl;
       }
         else if (60 < average && average < 70) {
+        grade = 'D';
         cout << "Grade: D" << endl;
       }
         else if (0 < average && average < 60) {
+        grade = 'F';
         cout << "Grade: F" << endl;
       }
     } 
