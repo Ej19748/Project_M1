@@ -39,11 +39,12 @@ void readScores(double& s1, double& s2, double& s3) {
         break;
       }
     }
-    double getAverage(double s1, double s2, double s3) { 
-    double average = (s1 + s2 + s3) / 3.0;
+    double getAverage(double s1, double s2, double s3, double& average) { 
+    average = (s1 + s2 + s3) / 3.0;
     return average;
   }
-    void getGrade(double average, char& grade) {
+    void getGrade(double s1, double s2, double s3, double& average, char& grade) {
+    average = (s1 + s2 + s3) / 3.0;
       cout << "Average: " << average << endl;
       if (90 < average && average <= 100) {
         cout << "Grade: A" << endl;
