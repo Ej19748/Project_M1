@@ -42,8 +42,6 @@ void readScores(double& s1, double& s2, double& s3) {
     }
     double getAverage(double s1, double s2, double s3) { 
     double average = (s1 + s2 + s3) / 3.0;
-    char grade = 0;
-      grade = s1 * s2 * s3;
     return average;
   }
     void getGrade(double average) {
