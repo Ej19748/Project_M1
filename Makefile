@@ -1,16 +1,22 @@
-all: main
+# Makefile for Student Grades Program
 
-CXX = clang++
-override CXXFLAGS += -g -Wall -Werror
+CXX = g++
+CXXFLAGS = -Wall -Wextra -std=c++11
+SOURCES = main.cpp
+OBJECTS = $(SOURCES:.cpp=.o)
+TARGET = main
 
-SRCS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.cpp' -print | sed -e 's/ /\\ /g')
-HEADERS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.h' -print)
+# Default target
+all: $(TARGET)
 
-main: $(SRCS) $(HEADERS)
-	$(CXX) $(CXXFLAGS) $(SRCS) -o "$@"
+# Link objects to create the executable
+$(TARGET): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
-main-debug: $(SRCS) $(HEADERS)
-	NIX_HARDENING_ENABLE= $(CXX) $(CXXFLAGS) -O0  $(SRCS) -o "$@"
+# Compile sources into objects
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+# Clean up build files
 clean:
-	rm -f main main-debug
+	rm -f $(OBJECTS) $(TARGET)

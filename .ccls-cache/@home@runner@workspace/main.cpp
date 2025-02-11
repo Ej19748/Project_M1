@@ -1,71 +1,74 @@
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 #include <string>
 
 using namespace std;
 
-void readScores(double& s1, double& s2, double& s3);
-void getGrade(const double s1, const double s2, const double s3, double& avg, char& grade);
-double getAverage(const double s1, const double s2, const double s3, double& average);
-void print(const double s1, const double s2, const double s3, const double average, const char grade);
-
+const int MAX_STUDENTS = 100;
+const int MAX_TESTS = 10;
+int readData(ifstream &file, string names[], double scores[][MAX_TESTS], int &numTests);
+void calculateAverages(const double scores[][MAX_TESTS], double averages[], int numStudents, int numTests);
+char getLetterGrade(double average);
+void printReport(const string names[], const double averages[], int numStudents);
 int main() {
-    double s1, s2, s3, average;
-    char grade = 0;
-    readScores(s1, s2, s3);
-    getGrade(s1, s2, s3, average, grade);
-    getAverage(s1, s2, s3, average);
-    print(s1, s2, s3, average, grade);
-    return 0;
-}
-void readScores(double& s1, double& s2, double& s3) {
-    cout << "Enter three grades: ";
-    cin >> s1 >> s2 >> s3;
-    while (s1 < 0 || s1 > 100)
-      {
-        cout << "Enter a grade from 0 to 100: ";
-        cin >> s1;
-        break;
-      }
-    while (s2 < 0 || s2 > 100)
-      {
-        cout << "Enter a grade from 0 to 100: ";
-        cin >> s2;
-        break;
-      }
-    while (s3 < 0 || s3 > 100)
-      {
-        cout << "Enter a grade from 0 to 100: ";
-        cin >> s3;
-        break;
-      }
+    ifstream inputFile("StudentGrades.txt");
+    if (!inputFile) {
+        cerr << "Error: Unable to open file.\n";
+        return 1;
     }
-    double getAverage(double s1, double s2, double s3, double& average) { 
-    average = (s1 + s2 + s3) / 3.0;
-    return average;
-  }
-    void getGrade(double s1, double s2, double s3, double& average, char& grade) {
-    average = (s1 + s2 + s3) / 3.0;
-      cout << "Average: " << average << endl;
-      if (90 < average && average <= 100) {
-        cout << "Grade: A" << endl;
-      }
-      else if (80 < average && average < 90) {
-        cout << "Grade: B" << endl;
-      }
-       else if (70 < average && average < 80) {
-        cout << "Grade: C" << endl;
-      }
-        else if (60 < average && average < 70) {
-        cout << "Grade: D" << endl;
-      }
-        else if (0 < average && average < 60) {
-        cout << "Grade: F" << endl;
-      }
-    } 
-    void print(double s1, double s2, double s3, double average, char grade) {
-      cout << "Score 1: " << s1 << endl;
-      cout << "Score 2: " << s2 << endl;
-      cout << "Score 3: " << s3 << endl;
-      cout << "Average: " << average << endl;
-      cout << "Grade: " << grade << endl;
+    string names[MAX_STUDENTS];
+    double scores[MAX_STUDENTS][MAX_TESTS];
+    double averages[MAX_STUDENTS];
+    int numStudents = 0;
+    int numTests = 0;
+        numStudents = readData(inputFile, names, scores, numTests);
+        inputFile.close();
+        calculateAverages(scores, averages, numStudents, numTests);
+        printReport(names, averages, numStudents);
+        return 0;
+    }
+    int readData(ifstream &file, string names[], double scores[][MAX_TESTS], int &numTests) {
+        int studentCount = 0;
+        while (file >> names[studentCount]) { 
+            int testCount = 0;
+            while (testCount < MAX_TESTS && file >> scores[studentCount][testCount]) {
+                testCount++;
+                if (file.peek() == '\n' || file.peek() == EOF) break;
+            }
+            if (studentCount == 0) {
+                numTests = testCount;
+            }
+            studentCount++;
+            if (studentCount >= MAX_STUDENTS) break;
+        }
+        return studentCount;
+    }
+    void calculateAverages(const double scores[][MAX_TESTS], double averages[], int numStudents, int numTests) {
+        for (int i = 0; i < numStudents; i++) {
+            double total = 0;
+            for (int j = 0; j < numTests; j++) {
+                total += scores[i][j];
+            }
+            averages[i] = total / numTests;
+        }
+    }
+    char getLetterGrade(double average) {
+        if (average >= 90) return 'A';
+        else if (average >= 80) return 'B';
+        else if (average >= 70) return 'C';
+        else if (average >= 60) return 'D';
+        return 'F';
+    }
+    void printReport(const string names[], const double averages[], int numStudents) {
+        cout << "\nStudent Report\n";
+        cout << "--------------------------------------\n";
+        cout << left << setw(15) << "Name" << setw(10) << "Average" << setw(10) << "Grade" << endl;
+        cout << "--------------------------------------\n";
+
+        for (int i = 0; i < numStudents; i++) {
+            cout << left << setw(15) << names[i]
+                 << setw(10) << fixed << setprecision(2) << averages[i]
+                 << setw(10) << getLetterGrade(averages[i]) << endl;
+        }
     }
